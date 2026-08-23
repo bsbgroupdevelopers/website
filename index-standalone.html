@@ -826,8 +826,29 @@ const FORM_ENDPOINT = 'https://formsubmit.co/ajax/' + FORM_INBOX;
 const form = document.getElementById('contactForm');
 const submitBtn = document.getElementById('submitBtn');
 const formNote = document.getElementById('formNote');
-const FALLBACK = 'Couldn\'t send that — please email <a href="mailto:' + FORM_INBOX + '">' +
-  FORM_INBOX + '</a> or <a href="https://wa.me/919303008315" target="_blank" rel="noopener">WhatsApp us</a>.';
+const WHATSAPP = '919303008315';
+
+/* If the send fails for ANY reason — service down, offline, or the form
+   not yet activated — the visitor's typed message must not be thrown away.
+   Build one-click email and WhatsApp links already carrying what they
+   wrote, so the enquiry still reaches us instead of being lost. */
+function buildFallback(){
+  const name  = (form.name.value || '').trim();
+  const email = (form.email.value || '').trim();
+  const msg   = (form.message.value || '').trim();
+
+  const subject = 'Project enquiry' + (name ? ' from ' + name : '');
+  const body = 'Name: ' + name + '\nEmail: ' + email + '\n\n' + msg;
+
+  const mailto = 'mailto:' + FORM_INBOX +
+    '?subject=' + encodeURIComponent(subject) +
+    '&body='    + encodeURIComponent(body);
+  const wa = 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(subject + '\n\n' + body);
+
+  return 'Couldn\'t send automatically — your message is saved below. ' +
+    'Send it in one tap: <a href="' + mailto + '">open email</a> · ' +
+    '<a href="' + wa + '" target="_blank" rel="noopener">send on WhatsApp</a>';
+}
 
 form.addEventListener('submit', async function(e){
   e.preventDefault();
@@ -856,9 +877,9 @@ form.addEventListener('submit', async function(e){
     }
   } catch (err) {
     formNote.style.color = 'var(--err)';
-    formNote.innerHTML = FALLBACK;
+    formNote.innerHTML = buildFallback();   // keeps what they typed
     submitBtn.disabled = false;
-    submitBtn.innerHTML = 'Send message <span class="arrow" aria-hidden="true">→</span>';
+    submitBtn.innerHTML = 'Book a 20-minute call <span class="arrow" aria-hidden="true">→</span>';
   }
 });
 

@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BSB Group Developers — Software Development Company, Hyderabad</title>
+<meta name="description" content="BSB Group Developers builds fast, reliable websites, online stores and web applications. Based in Hyderabad, working with clients worldwide.">
+<meta name="color-scheme" content="light dark">
+
+<meta property="og:title" content="BSB Group Developers — Software Development Company">
+<meta property="og:description" content="Fast, reliable websites, stores and web apps. Built in Hyderabad.">
+<meta property="og:type" content="website">
+
+<!-- Runs before first paint so a returning visitor never sees a flash of
+     the wrong theme. Must stay inline and stay in <head>. -->
+<script>
+(function(){try{
+  var t=localStorage.getItem('bsb-theme');
+  if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);
+}catch(e){}})();
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   COLOUR SYSTEM — two themes, one rule
+   ------------------------------------------------------------
+   --accent stays reserved for things you can CLICK (links,
+   buttons, focus rings). The --c1..--c6 categorical hues are for
+   things you CANNOT click (numbers, stats, badges, borders).
+   Keeping that split is what stops "more colour" from turning
+   into "everything looks like a link".
+   All pairs below are verified at WCAG AA in BOTH themes.
+   ============================================================ */
+:root{
+  /* ---------- LIGHT (default) ---------- */
+  --bg:#FFFFFF;
+  --bg-raised:#F5F8FC;
+  --bg-sunk:#EEF3F9;
+  --line:#DFE6F0;
+  --text:#0B1220;
+  --text-dim:#55627A;      /* 6.2:1 on white */
+
+  --accent:#0057E5;        /* interactive only — 6.0:1 on white */
+  --accent-soft:0,87,229;
+  --on-accent:#FFFFFF;
+
+  /* categorical — decorative, never the only signal for an action */
+  --c1:#2563EB;  --c2:#7C3AED;  --c3:#047857;
+  --c4:#B45309;  --c5:#BE185D;  --c6:#0E7490;
+
+  --nav-bg:rgba(255,255,255,.78);
+  --spot:rgba(10,18,32,.05);
+  --field-line:11,18,32;   /* canvas wireframe, rgb triplet */
+  --shadow:0 18px 44px rgba(12,20,36,.10);
+  --ok:#047857;  --err:#BE123C;
+  --w1:37,99,235;  --w2:124,58,237;  --w3:14,116,144;   /* hero wash */
+
+  /* ---------- SPACING SCALE ----------
+     One ratio everywhere replaces the ad-hoc values that made
+     rhythm inconsistent between sections. */
+  --s1:6px;   --s2:12px;  --s3:20px;  --s4:32px;
+  --s5:48px;  --s6:76px;  --s7:112px; --s8:148px;
+
+  --max:1120px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+  color-scheme:light;
+}
+
+:root[data-theme="dark"]{
+  --bg:#080A0F;
+  --bg-raised:#111621;
+  --bg-sunk:#0C1017;
+  --line:#1F2733;
+  --text:#F4F7FA;
+  --text-dim:#9AA6BC;      /* 7.4:1 on raised */
+
+  --accent:#22D3EE;        /* 10.8:1 on bg */
+  --accent-soft:34,211,238;
+  --on-accent:#04161A;
+
+  --c1:#60A5FA;  --c2:#A78BFA;  --c3:#34D399;
+  --c4:#FBBF24;  --c5:#F472B6;  --c6:#22D3EE;
+
+  --nav-bg:rgba(8,10,15,.74);
+  --spot:rgba(255,255,255,.055);
+  --field-line:244,247,250;
+  --shadow:0 26px 56px rgba(0,0,0,.5);
+  --ok:#34D399;  --err:#FB7185;
+  --w1:56,132,255;  --w2:167,139,250;  --w3:34,211,238;
+  color-scheme:dark;
+}
+
+/* Follow the OS when the visitor hasn't chosen explicitly. */
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#080A0F; --bg-raised:#111621; --bg-sunk:#0C1017;
+    --line:#1F2733; --text:#F4F7FA; --text-dim:#9AA6BC;
+    --accent:#22D3EE; --accent-soft:34,211,238; --on-accent:#04161A;
+    --c1:#60A5FA; --c2:#A78BFA; --c3:#34D399;
+    --c4:#FBBF24; --c5:#F472B6; --c6:#22D3EE;
+    --nav-bg:rgba(8,10,15,.74); --spot:rgba(255,255,255,.055);
+    --field-line:244,247,250; --shadow:0 26px 56px rgba(0,0,0,.5);
+    --ok:#34D399; --err:#FB7185;
+    --w1:56,132,255; --w2:167,139,250; --w3:34,211,238;
+    color-scheme:dark;
+  }
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+h1,h2,h3{font-family:'Space Grotesk',system-ui,sans-serif;line-height:1.05;letter-spacing:-.02em}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--s4)}
+
+a:focus-visible,button:focus-visible{
+  outline:2px solid var(--accent);outline-offset:3px;border-radius:4px;
+}
+
+/* ================= NAV ================= */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  backdrop-filter:blur(12px);background:var(--nav-bg);
+  border-bottom:1px solid transparent;transition:border-color .3s var(--ease);
+}
+.nav.stuck{border-bottom-color:var(--line)}
+.nav-in{
+  max-width:var(--max);margin:0 auto;padding:0 var(--s4);height:70px;
+  display:flex;align-items:center;gap:var(--s4);
+}
+.nav-in nav{margin-left:auto}
+.mark{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;
+  font-weight:700;font-size:1rem;letter-spacing:-.01em}
+.mark .glyph{
+  width:30px;height:30px;border-radius:8px;border:1px solid var(--line);
+  display:grid;place-items:center;font-size:.66rem;letter-spacing:.02em;color:var(--text-dim);
+}
+.nav-links{display:flex;gap:32px;align-items:center;list-style:none}
+.nav-links a{font-size:.9rem;color:var(--text-dim);font-weight:500;
+  position:relative;transition:color .25s var(--ease)}
+.nav-links a::after{
+  content:"";position:absolute;left:0;right:0;bottom:-6px;height:1px;background:var(--accent);
+  transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ease);
+}
+.nav-links a:hover{color:var(--text)}
+.nav-links a:hover::after{transform:scaleX(1)}
+
+/* theme toggle — clickable, so it carries the accent on hover */
+.theme-btn{
+  width:38px;height:38px;border-radius:10px;flex-shrink:0;
+  border:1px solid var(--line);background:transparent;color:var(--text-dim);
+  display:grid;place-items:center;cursor:pointer;
+  transition:color .25s var(--ease),border-color .25s var(--ease),background .25s var(--ease);
+}
+.theme-btn:hover{color:var(--accent);border-color:var(--accent);background:var(--bg-raised)}
+.theme-btn svg{width:17px;height:17px;fill:currentColor}
+.theme-btn .ic-moon{display:none}
+:root[data-theme="dark"] .theme-btn .ic-sun{display:none}
+:root[data-theme="dark"] .theme-btn .ic-moon{display:block}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .theme-btn .ic-sun{display:none}
+  :root:not([data-theme="light"]) .theme-btn .ic-moon{display:block}
+}
+
+/* ================= HERO ================= */
+.hero{position:relative;min-height:100svh;display:grid;place-items:center;
+  padding:120px 0 96px;isolation:isolate}
+.spot{
+  position:absolute;inset:0;z-index:-2;pointer-events:none;
+  background:radial-gradient(420px circle at var(--mx,50%) var(--my,40%),
+             var(--spot),transparent 62%);
+}
+/* Vibrant multi-hue wash behind the hero — the cheapest way to add colour
+   without putting it on anything a visitor might mistake for a control. */
+.hero::before{
+  content:"";position:absolute;inset:0;z-index:-3;pointer-events:none;
+  background:
+    radial-gradient(680px 420px at 12% 8%, rgba(var(--w1),.20), transparent 60%),
+    radial-gradient(620px 460px at 88% 12%, rgba(var(--w2),.18), transparent 62%),
+    radial-gradient(720px 380px at 50% 104%, rgba(var(--w3),.16), transparent 66%);
+}
+#field{
+  position:absolute;z-index:-1;pointer-events:none;
+  left:50%;top:46%;transform:translate(-50%,-50%);
+  /* Hollow centre: the shape frames the type instead of sitting behind
+     it as noise. Legibility of the hook outranks the decoration. */
+  -webkit-mask-image:radial-gradient(circle at 50% 50%,transparent 30%,rgba(0,0,0,.55) 46%,#000 60%,#000 76%,transparent 94%);
+  mask-image:radial-gradient(circle at 50% 50%,transparent 30%,rgba(0,0,0,.55) 46%,#000 60%,#000 76%,transparent 94%);
+}
+.hero-in{position:relative;text-align:center;max-width:800px;padding:0 28px}
+.kicker{display:inline-flex;align-items:center;gap:9px;font-size:.74rem;font-weight:500;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--text-dim);margin-bottom:26px}
+.kicker .dot{width:6px;height:6px;border-radius:50%;background:var(--text-dim);
+  animation:breathe 2.6s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:.35}50%{opacity:1}}
+
+.hook{font-size:clamp(2.5rem,7vw,4.9rem);font-weight:700;margin-bottom:24px}
+.hook .line{display:block;overflow:hidden}
+.hook .line > span{display:block;animation:riseIn .9s var(--ease) both}
+.hook .line:nth-child(2) > span{animation-delay:.09s}
+@keyframes riseIn{from{transform:translateY(102%)}to{transform:translateY(0)}}
+
+.sub{color:var(--text-dim);font-size:1.06rem;max-width:520px;margin:0 auto 40px;
+  animation:fadeUp .9s var(--ease) .3s both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;
+  animation:fadeUp .9s var(--ease) .42s both}
+
+/* ---- PRIMARY CTA: proximity-reactive glow ----
+   ::before = constant gentle pulse (baseline life)
+   ::after  = proximity layer driven by --prox (0→1) from JS
+   They sum, so the signal ramps up as the cursor approaches. */
+.cta{
+  --prox:0;position:relative;isolation:isolate;
+  display:inline-flex;align-items:center;gap:10px;
+  padding:16px 32px;border-radius:999px;border:none;cursor:pointer;
+  background:var(--accent);color:var(--on-accent);
+  font-family:'Inter',sans-serif;font-size:.96rem;font-weight:600;
+  transition:transform .28s var(--ease);will-change:transform;
+}
+.cta::before,.cta::after{content:"";position:absolute;inset:0;border-radius:inherit;
+  z-index:-1;pointer-events:none}
+.cta::before{box-shadow:0 0 26px 2px rgba(var(--accent-soft),.42);
+  animation:pulse 3.1s ease-in-out infinite}
+.cta::after{box-shadow:0 0 54px 10px rgba(var(--accent-soft),.62);
+  opacity:calc(var(--prox) * .9);transition:opacity .18s linear}
+@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+.cta:hover{transform:translateY(-2px)}
+.cta:active{transform:translateY(0)}
+.cta .arrow{transition:transform .3s var(--ease)}
+.cta:hover .arrow{transform:translateX(3px)}
+
+.cta-alt{display:inline-flex;align-items:center;padding:16px 30px;border-radius:999px;
+  border:1px solid var(--line);color:var(--text);font-size:.96rem;font-weight:500;
+  transition:border-color .28s var(--ease),color .28s var(--ease)}
+.cta-alt:hover{border-color:var(--accent);color:var(--accent)}
+/* Secondary action is a text link, not a second button: two button-weight
+   CTAs split attention and neither reads as the primary. */
+.link-alt{display:inline-flex;align-items:center;gap:7px;padding:16px 4px;
+  font-size:.94rem;font-weight:500;color:var(--text-dim);
+  transition:color .25s var(--ease)}
+.link-alt:hover{color:var(--accent)}
+.link-alt span{transition:transform .3s var(--ease)}
+.link-alt:hover span{transform:translateX(3px)}
+
+/* ---- SCENT TRAIL: the downward cue (a real anchor, so accent is earned) ---- */
+.trail{position:absolute;left:50%;transform:translateX(-50%);bottom:34px;
+  display:flex;flex-direction:column;align-items:center;gap:12px;color:var(--text-dim);
+  animation:fadeUp 1s var(--ease) .8s both}
+.trail .label{font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;
+  transition:color .3s var(--ease)}
+.trail .rail{position:relative;width:1px;height:56px;overflow:hidden;
+  background:linear-gradient(180deg,transparent,var(--line) 25%,var(--line))}
+.trail .rail::after{content:"";position:absolute;left:0;top:-45%;width:1px;height:45%;
+  background:linear-gradient(180deg,transparent,var(--accent));
+  animation:drip 2.15s var(--ease) infinite}
+@keyframes drip{0%{top:-45%;opacity:0}18%{opacity:1}82%{opacity:1}100%{top:100%;opacity:0}}
+.trail .chev{width:9px;height:9px;border-right:1.5px solid var(--accent);
+  border-bottom:1.5px solid var(--accent);transform:rotate(45deg);
+  animation:bob 2.15s var(--ease) infinite}
+@keyframes bob{0%,100%{transform:rotate(45deg) translate(0,0);opacity:.55}
+               50%{transform:rotate(45deg) translate(2px,2px);opacity:1}}
+.trail:hover .label{color:var(--text)}
+
+/* ================= SECTIONS ================= */
+section{padding:var(--s7) 0}
+
+/* ---- PROOF STRIP: answers "says who?" immediately after the claim ---- */
+.proof-wrap{padding:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.proof{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s4);padding:var(--s5) var(--s4)}
+.proof .stat b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1.9rem;
+  font-weight:700;line-height:1.1;margin-bottom:var(--s1)}
+.proof .stat:nth-child(1) b{color:var(--c1)}
+.proof .stat:nth-child(2) b{color:var(--c2)}
+.proof .stat:nth-child(3) b{color:var(--c4)}
+.proof .stat:nth-child(4) b{color:var(--c3)}
+.proof .stat span{font-size:.84rem;color:var(--text-dim)}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s3);
+  margin-bottom:var(--s6);flex-wrap:wrap}
+.sec-title{font-size:clamp(1.7rem,3.4vw,2.5rem);font-weight:700}
+.sec-num{font-size:.72rem;letter-spacing:.2em;color:var(--c6);font-weight:600;
+  text-transform:uppercase}
+
+/* ---- SERVICES ---- */
+.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.svc{position:relative;background:var(--bg);padding:var(--s5) var(--s4);
+  transition:background .35s var(--ease)}
+.svc::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
+.svc:nth-child(1)::before{background:var(--c1)}
+.svc:nth-child(2)::before{background:var(--c2)}
+.svc:nth-child(3)::before{background:var(--c3)}
+.svc:hover{background:var(--bg-raised)}
+.svc:hover::before{transform:scaleX(1)}
+.svc .n{font-size:.74rem;font-weight:600;font-variant-numeric:tabular-nums;
+  display:inline-block;margin-bottom:var(--s3);padding:5px 10px;border-radius:6px}
+/* Categorical hues: decorative only, on elements nobody can click. */
+.svc:nth-child(1) .n{color:var(--c1);background:rgba(37,99,235,.12)}
+.svc:nth-child(2) .n{color:var(--c2);background:rgba(124,58,237,.12)}
+.svc:nth-child(3) .n{color:var(--c3);background:rgba(4,120,87,.12)}
+:root[data-theme="dark"] .svc:nth-child(1) .n{background:rgba(96,165,250,.14)}
+:root[data-theme="dark"] .svc:nth-child(2) .n{background:rgba(167,139,250,.14)}
+:root[data-theme="dark"] .svc:nth-child(3) .n{background:rgba(52,211,153,.14)}
+.svc h3{font-size:1.08rem;font-weight:500;margin-bottom:9px}
+.svc p{font-size:.9rem;color:var(--text-dim)}
+/* Named tools are evidence; a category name is not. */
+.svc .tech{margin-top:14px;font-size:.78rem;color:var(--text-dim);opacity:.8;
+  letter-spacing:.01em}
+.svc-also{margin-top:22px;font-size:.88rem;color:var(--text-dim)}
+
+/* ---- AI service line: capability stated plainly, no case-study claims ---- */
+.ai-block{margin-top:46px;border:1px solid var(--line);border-radius:14px;
+  padding:38px 34px;background:var(--bg-raised);max-width:760px}
+.ai-block .sec-num{display:block;margin-bottom:14px}
+.ai-block h3{font-size:1.5rem;font-weight:700;margin-bottom:14px}
+.ai-block p{font-size:.95rem;color:var(--text-dim);margin-bottom:14px}
+.ai-block .ai-eg{font-size:.88rem;padding-left:16px;border-left:1px solid var(--line)}
+.ai-block .ai-proof{font-size:.82rem;opacity:.6;margin-bottom:0}
+
+/* ---- WORK ---- */
+.work-list{border-top:1px solid var(--line)}
+.item{display:grid;grid-template-columns:auto 1fr auto;gap:var(--s4);align-items:center;
+  padding:var(--s4) 4px;border-bottom:1px solid var(--line);position:relative;
+  transition:padding-left .35s var(--ease)}
+.item::before{content:"";position:absolute;left:-4px;top:50%;
+  transform:translateY(-50%) scaleY(0);width:2px;height:64%;background:var(--accent);
+  transition:transform .35s var(--ease)}
+.item:hover{padding-left:18px}
+.item:hover::before{transform:translateY(-50%) scaleY(1)}
+.item .idx{font-size:.74rem;color:var(--text-dim);font-variant-numeric:tabular-nums}
+.item h3{font-size:clamp(1.12rem,2.2vw,1.45rem);font-weight:500;margin-bottom:5px}
+.item p{font-size:.9rem;color:var(--text-dim);max-width:56ch}
+/* Outcome line answers "says who?" on each project. */
+.item .outcome{margin-top:8px;font-size:.84rem;color:var(--text);opacity:.75}
+.item .go{font-size:.82rem;color:var(--text-dim);white-space:nowrap;display:flex;
+  align-items:center;gap:7px;transition:color .3s var(--ease)}
+.item:hover .go{color:var(--accent)}
+.item .go span{transition:transform .3s var(--ease)}
+.item:hover .go span{transform:translateX(4px)}
+
+/* ---- PROCESS ---- */
+.steps{list-style:none;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.step{background:var(--bg);padding:var(--s5) var(--s4);transition:background .35s var(--ease)}
+.step:hover{background:var(--bg-raised)}
+.step .s-n{display:grid;place-items:center;width:30px;height:30px;border-radius:8px;
+  font-family:'Space Grotesk',sans-serif;font-size:.76rem;font-weight:700;
+  margin-bottom:var(--s3)}
+.step:nth-child(1) .s-n{color:var(--c1);background:rgba(37,99,235,.12)}
+.step:nth-child(2) .s-n{color:var(--c2);background:rgba(124,58,237,.12)}
+.step:nth-child(3) .s-n{color:var(--c4);background:rgba(180,83,9,.12)}
+.step:nth-child(4) .s-n{color:var(--c3);background:rgba(4,120,87,.12)}
+:root[data-theme="dark"] .step:nth-child(1) .s-n{background:rgba(96,165,250,.14)}
+:root[data-theme="dark"] .step:nth-child(2) .s-n{background:rgba(167,139,250,.14)}
+:root[data-theme="dark"] .step:nth-child(3) .s-n{background:rgba(251,191,36,.14)}
+:root[data-theme="dark"] .step:nth-child(4) .s-n{background:rgba(52,211,153,.14)}
+.step h3{font-size:1.02rem;font-weight:500;margin-bottom:8px}
+.step p{font-size:.88rem;color:var(--text-dim)}
+
+/* ---- CLIENT QUOTE: attribution is what makes it worth anything ---- */
+.quote{margin:46px 0 0;padding:32px 34px;border:1px solid var(--line);border-radius:14px;
+  background:var(--bg-raised);max-width:720px}
+.quote blockquote{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;font-weight:500;
+  line-height:1.45;letter-spacing:-.01em;margin-bottom:16px}
+.quote figcaption{font-size:.84rem;color:var(--text-dim)}
+
+/* ---- MID-PAGE CTA: one action at the point of peak interest ---- */
+.mid-cta{margin-top:52px;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.mid-cta p{font-size:1rem;color:var(--text-dim)}
+
+/* ---- LEADERSHIP ----
+   Portraits are rendered monochrome so a photo and a monogram read as
+   one consistent set. It also stops a warm background photo from
+   fighting the palette. */
+.team{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s4)}
+.person{border:1px solid var(--line);border-radius:16px;padding:var(--s5) var(--s4);
+  background:var(--bg);transition:border-color .35s var(--ease),background .35s var(--ease)}
+.person:hover{border-color:#2A3340;background:var(--bg-raised)}
+.avatar{
+  width:96px;height:96px;border-radius:50%;overflow:hidden;margin-bottom:var(--s3);
+  border:1px solid var(--line);background:var(--bg-raised);
+  display:grid;place-items:center;
+}
+/* The three photos were shot in different places (grey wall, office, event).
+   Desaturating makes them read as one set; colour returns on hover so the
+   real photo is still there. Delete the filter line for full colour always. */
+.avatar img{width:100%;height:100%;object-fit:cover;
+  filter:grayscale(1) contrast(1.06) brightness(.98);
+  transition:filter .4s var(--ease),transform .4s var(--ease)}
+.person:hover .avatar img{filter:grayscale(0) contrast(1.02);transform:scale(1.04)}
+.avatar .mono{font-family:'Space Grotesk',sans-serif;font-size:1.32rem;font-weight:500;
+  color:var(--text-dim);letter-spacing:.02em}
+.person h3{font-size:1.1rem;font-weight:500;margin-bottom:7px}
+.person .role{font-size:.82rem;color:var(--text);font-weight:500;margin-bottom:3px}
+.person .role-2{font-size:.78rem;color:var(--text-dim);margin-bottom:14px}
+.person p{font-size:.88rem;color:var(--text-dim)}
+
+/* ---- CONTACT ---- */
+.contact-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:var(--s6);align-items:start}
+.cinfo dl{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:12px;overflow:hidden}
+.cinfo .row{background:var(--bg);padding:20px 22px;display:flex;justify-content:space-between;
+  gap:16px;align-items:baseline}
+.cinfo dt{color:var(--text-dim);font-size:.84rem}
+.cinfo dd{font-size:.88rem;text-align:right}
+.cinfo dd a{transition:color .25s var(--ease)}
+.cinfo dd a:hover{color:var(--accent)}
+
+form{display:grid;gap:14px}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+input,textarea{
+  width:100%;padding:15px 17px;border-radius:11px;border:1px solid var(--line);
+  background:var(--bg-raised);color:var(--text);
+  font-family:'Inter',sans-serif;font-size:.94rem;transition:border-color .25s var(--ease);
+}
+/* was 3.36:1 — below AA. Now inherits the verified --text-dim. */
+input::placeholder,textarea::placeholder{color:var(--text-dim);opacity:1}
+input:focus,textarea:focus{outline:none;border-color:var(--accent)}
+textarea{min-height:132px;resize:vertical}
+.f-note{font-size:.82rem;color:var(--text-dim)}
+.f-note a{color:var(--accent)}
+
+footer{border-top:1px solid var(--line);padding:34px 0}
+.foot-in{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
+.foot-in small{color:var(--text-dim);font-size:.8rem}
+.foot-links{display:flex;gap:22px}
+.foot-links a{font-size:.84rem;color:var(--text-dim);transition:color .25s var(--ease)}
+.foot-links a:hover{color:var(--accent)}
+
+/* floating WhatsApp — clickable, so accent is legitimate */
+.wa{position:fixed;right:20px;bottom:20px;z-index:60;width:50px;height:50px;border-radius:50%;
+  display:grid;place-items:center;background:var(--accent);color:var(--on-accent);
+  box-shadow:0 8px 26px rgba(var(--accent-soft),.34);transition:transform .25s var(--ease)}
+.wa:hover{transform:scale(1.07)}
+.wa svg{width:25px;height:25px;fill:currentColor}
+
+.rv{opacity:0;transform:translateY(20px);
+  transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.rv.in{opacity:1;transform:none}
+
+/* ================= RESPONSIVE ================= */
+@media(max-width:900px){
+  .proof{grid-template-columns:1fr 1fr;gap:24px}
+  .steps{grid-template-columns:1fr 1fr}
+  .svc-grid{grid-template-columns:1fr 1fr}
+  .team{grid-template-columns:1fr 1fr}
+  .contact-grid{grid-template-columns:1fr;gap:40px}
+}
+@media(max-width:640px){
+  section{padding:88px 0}
+  #field{opacity:.5}     /* type spans the shape at this width; fade decoration */
+  .nav-links{display:none}
+  .svc-grid,.team,.steps{grid-template-columns:1fr}
+  .proof{grid-template-columns:1fr 1fr;padding:30px 28px}
+  .ai-block{padding:30px 24px}
+  .quote{padding:26px 24px}
+  .mid-cta{flex-direction:column;align-items:stretch;gap:16px}
+  .mid-cta .cta{justify-content:center}
+  .item{grid-template-columns:1fr;gap:10px;padding:26px 4px}
+  .item .idx{display:none}
+  .item:hover{padding-left:12px}
+  .f-row{grid-template-columns:1fr}
+  .cta-row{flex-direction:column;align-items:stretch}
+  .cta,.cta-alt{justify-content:center}
+  .hero{padding:104px 0 92px}
+  .trail{bottom:22px}
+}
+
+/* ================= REDUCED MOTION ================= */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;
+    animation-iteration-count:1!important;transition-duration:.001ms!important}
+  .rv{opacity:1;transform:none}
+  .hook .line > span{transform:none}
+  .cta::after{opacity:.34}    /* static, honest glow instead of proximity */
+  .spot{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="nav-in">
+    <a class="mark" href="#top"><span class="glyph">BSB</span> BSB Group</a>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="#services">Services</a></li>
+        <li><a href="#work">Work</a></li>
+        <li><a href="#team">Leadership</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <button class="theme-btn" id="themeBtn" type="button"
+            aria-label="Switch theme" title="Switch theme">
+      <svg class="ic-sun" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2.5a1 1 0 0 1 1 1V22a1 1 0 1 1-2 0v-1.5a1 1 0 0 1 1-1zm0-19a1 1 0 0 1 1 1V3a1 1 0 1 1-2 0V1.5a1 1 0 0 1 1-1zM22 11a1 1 0 1 1 0 2h-1.5a1 1 0 1 1 0-2H22zM3.5 11a1 1 0 1 1 0 2H2a1 1 0 1 1 0-2h1.5zm15.4-6.4a1 1 0 0 1 0 1.4l-1 1a1 1 0 1 1-1.5-1.4l1-1a1 1 0 0 1 1.5 0zM7.6 15.9a1 1 0 0 1 0 1.4l-1 1a1 1 0 0 1-1.5-1.4l1-1a1 1 0 0 1 1.5 0zm11.3 1a1 1 0 0 1-1.4 1.4l-1-1a1 1 0 0 1 1.4-1.4l1 1zM7.6 8.1A1 1 0 0 1 6.2 9.5l-1-1a1 1 0 0 1 1.4-1.4l1 1z"/></svg>
+      <svg class="ic-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 13.2A9 9 0 1 1 10.8 3a7 7 0 0 0 10.2 10.2z"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="hero">
+  <div class="spot" id="spot" aria-hidden="true"></div>
+  <canvas id="field" width="640" height="640" aria-hidden="true"></canvas>
+
+  <div class="hero-in">
+    <p class="kicker"><span class="dot"></span> Hyderabad · Available for new projects</p>
+    <h1 class="hook">
+      <span class="line"><span>You brief the people</span></span>
+      <span class="line"><span>who write the code.</span></span>
+    </h1>
+    <p class="sub">Websites, online stores and web applications — built, shipped and supported after launch.</p>
+    <div class="cta-row">
+      <!-- One primary action per screen: the glow now points at the booking, not at browsing. -->
+      <a class="cta" href="#contact">Book a 20-minute call <span class="arrow" aria-hidden="true">→</span></a>
+      <a class="link-alt" href="#work">See our work <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+
+  <a class="trail" href="#services" aria-label="Scroll to services">
+    <span class="label">Scroll</span>
+    <span class="rail" aria-hidden="true"></span>
+    <span class="chev" aria-hidden="true"></span>
+  </a>
+</section>
+
+<!-- ================= PROOF STRIP =================
+     ⚠️ PLACEHOLDERS — replace the [ ] values with real numbers before
+     going live. Deliberately left visibly blank rather than filled with
+     invented figures: a wrong number here is worse than no number.
+     Delete any stat you can't back up; the row reflows to fit. -->
+<section class="proof-wrap" aria-label="Company facts">
+  <div class="wrap proof rv">
+    <div class="stat"><b>[ ]</b><span>Years building software</span></div>
+    <div class="stat"><b>[ ]</b><span>Projects delivered</span></div>
+    <div class="stat"><b>1 day</b><span>Typical reply time</span></div>
+    <div class="stat"><b>30 days</b><span>Post-launch support included</span></div>
+  </div>
+</section>
+
+<!-- ================= SERVICES ================= -->
+<section id="services" class="wrap">
+  <div class="sec-head rv">
+    <h2 class="sec-title">What we build</h2>
+    <span class="sec-num">01 — Services</span>
+  </div>
+  <!-- Three primary cards, not six: six equal cards create six competing
+       focal points and no hierarchy. The rest move to a compact list. -->
+  <div class="svc-grid rv">
+    <div class="svc"><span class="n">01</span><h3>Websites</h3>
+      <p>Business sites that load fast and turn visitors into enquiries.</p>
+      <p class="tech">WordPress · Next.js · Astro</p></div>
+    <div class="svc"><span class="n">02</span><h3>Online stores</h3>
+      <p>Payments, stock and a checkout built to convert.</p>
+      <p class="tech">WooCommerce · Shopify · Razorpay</p></div>
+    <div class="svc"><span class="n">03</span><h3>Web applications</h3>
+      <p>Dashboards, portals and internal tools your team runs on daily.</p>
+      <p class="tech">React · Node.js · PostgreSQL</p></div>
+  </div>
+
+  <!-- Demoted to a single line: real capabilities, but they were diluting
+       the three that win work. -->
+  <p class="svc-also rv">Also: mobile apps (React Native) · UI/UX design (Figma) · maintenance, hosting and performance work.</p>
+
+  <!-- ================= AI SERVICE LINE =================
+       Framed as capability, not case studies. ⚠️ PLACEHOLDER: replace the
+       bracketed line with one real AI project the moment you have one —
+       until then this claims only what you can defend. -->
+  <div class="ai-block rv">
+    <div>
+      <span class="sec-num">New service line</span>
+      <h3>A first, safe step into AI</h3>
+      <p>Most businesses don't need a large AI programme. They need one narrow, well-scoped task automated and measured before spending more. We build that first step — and tell you plainly when AI isn't the answer.</p>
+      <p class="ai-eg">Typical starting points: document and invoice extraction, customer-enquiry triage, internal search over your own files, reporting that writes itself.</p>
+      <p class="ai-proof">[PLACEHOLDER — add one shipped AI project, or delete this line until you have one.]</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WORK ================= -->
+<section id="work" class="wrap">
+  <div class="sec-head rv">
+    <h2 class="sec-title">Selected work</h2>
+    <span class="sec-num">02 — Projects</span>
+  </div>
+  <div class="work-list">
+    <a class="item rv" href="https://www.vachistudios.in" target="_blank" rel="noopener">
+      <span class="idx">001</span>
+      <span>
+        <h3>Vachi Studios — architecture practice</h3>
+        <p>Portfolio site built to let the work speak: fast-loading project galleries and a single clear enquiry path.</p>
+        <!-- ⚠️ PLACEHOLDER: replace with a real outcome (enquiries/month,
+             load time, bounce rate) or delete the line entirely. -->
+        <p class="outcome">Result: [ADD ONE METRIC — e.g. enquiries per month, or load time]</p>
+      </span>
+      <span class="go">Visit site <span aria-hidden="true">↗</span></span>
+    </a>
+    <a class="item rv" href="https://www.sohaus.in" target="_blank" rel="noopener">
+      <span class="idx">002</span>
+      <span>
+        <h3>Sohaus — architecture practice</h3>
+        <p>Image-led presence with responsive layouts that hold up on every screen size.</p>
+        <!-- ⚠️ PLACEHOLDER: same as above. -->
+        <p class="outcome">Result: [ADD ONE METRIC]</p>
+      </span>
+      <span class="go">Visit site <span aria-hidden="true">↗</span></span>
+    </a>
+  </div>
+
+  <!-- ⚠️ PLACEHOLDER QUOTE — replace with a real one, or delete this block.
+       An unattributed quote is worth less than none; a name and company are
+       what make it count. -->
+  <figure class="quote rv">
+    <blockquote>“[REAL CLIENT QUOTE — one or two sentences about what it was like to work with you, ideally mentioning a result.]”</blockquote>
+    <figcaption>[Name], [Role] · [Company]</figcaption>
+  </figure>
+
+  <!-- Mid-page CTA: interest peaks right after the work, and previously
+       there was no action available here. -->
+  <div class="mid-cta rv">
+    <p>Want something similar built?</p>
+    <a class="cta" href="#contact">Book a 20-minute call <span class="arrow" aria-hidden="true">→</span></a>
+  </div>
+</section>
+
+<!-- ================= PROCESS =================
+     No client data needed: process detail is the cheapest credibility
+     available when you don't yet have logos or metrics. This is also
+     where "passion for delivering" is demonstrated instead of claimed. -->
+<section id="process" class="wrap">
+  <div class="sec-head rv">
+    <h2 class="sec-title">How a project runs</h2>
+    <span class="sec-num">03 — Process</span>
+  </div>
+  <ol class="steps">
+    <li class="step rv"><span class="s-n">01</span><h3>A 20-minute call</h3>
+      <p>You describe the problem. We tell you whether we're the right fit — including when we're not.</p></li>
+    <li class="step rv"><span class="s-n">02</span><h3>Fixed scope, fixed quote</h3>
+      <p>Written scope and a fixed price before any work starts. No hourly surprises.</p></li>
+    <li class="step rv"><span class="s-n">03</span><h3>Weekly working builds</h3>
+      <p>You see a running version every week and can change direction while it's cheap to.</p></li>
+    <li class="step rv"><span class="s-n">04</span><h3>Launch, then 30 days</h3>
+      <p>We handle deployment and stay on for a month of fixes and tuning at no extra cost.</p></li>
+  </ol>
+</section>
+
+<!-- ================= LEADERSHIP ================= -->
+<section id="team" class="wrap">
+  <div class="sec-head rv">
+    <h2 class="sec-title">Leadership</h2>
+    <span class="sec-num">04 — Team</span>
+  </div>
+  <div class="team">
+
+    <div class="person rv">
+      <div class="avatar">
+        <img src="assets/team-aditya.jpg" width="440" height="440" loading="lazy" decoding="async"
+             alt="Aditya Kejriwal, Chief Executive Officer"
+             onerror="this.outerHTML='&lt;span class=\'mono\'&gt;AK&lt;/span&gt;'">
+      </div>
+      <h3>Aditya Kejriwal</h3>
+      <p class="role">Chief Executive Officer</p>
+      <p class="role-2">Strategy &amp; Operations</p>
+      <p>Sets company direction, owns commercial strategy, and keeps delivery running to schedule.</p>
+    </div>
+
+    <div class="person rv">
+      <div class="avatar">
+        <img src="assets/team-anshumaan.jpg" width="440" height="440" loading="lazy" decoding="async"
+             alt="Anshumaan Singh Baghel, Founder and Chief Technology Officer"
+             onerror="this.outerHTML='&lt;span class=\'mono\'&gt;AB&lt;/span&gt;'">
+      </div>
+      <h3>Anshumaan Singh Baghel</h3>
+      <p class="role">Founder &amp; Chief Technology Officer</p>
+      <p class="role-2">Code Development &amp; Review</p>
+      <p>Founded the studio and writes the code — architecture, build quality and every review before release.</p>
+    </div>
+
+    <div class="person rv">
+      <div class="avatar">
+        <img src="assets/team-rummanul.jpg" width="440" height="440" loading="lazy" decoding="async"
+             alt="Rummanaul, Chief Information Officer"
+             onerror="this.outerHTML='&lt;span class=\'mono\'&gt;R&lt;/span&gt;'">
+      </div>
+      <h3>Rummanaul</h3>
+      <p class="role">Chief Information Officer</p>
+      <p class="role-2">New Clients &amp; Marketing</p>
+      <p>First point of contact for new clients, and leads how the studio reaches the businesses it works with.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="contact" class="wrap">
+  <div class="sec-head rv">
+    <h2 class="sec-title">Book a 20-minute call</h2>
+    <span class="sec-num">05 — Contact</span>
+  </div>
+  <div class="contact-grid">
+    <div class="cinfo rv">
+      <dl>
+        <div class="row"><dt>Email</dt><dd><a href="mailto:bsbgroupdevelopers@gmail.com">bsbgroupdevelopers@gmail.com</a></dd></div>
+        <div class="row"><dt>Phone</dt><dd><a href="tel:+919303008315">+91 93030 08315</a></dd></div>
+        <div class="row"><dt>WhatsApp</dt><dd><a href="https://wa.me/919303008315" target="_blank" rel="noopener">Message us</a></dd></div>
+        <div class="row"><dt>Based in</dt><dd>Hyderabad, India</dd></div>
+        <div class="row"><dt>Hours</dt><dd>Mon–Sat, 9:00–20:00 IST</dd></div>
+      </dl>
+    </div>
+
+    <!-- Submissions are emailed via FormSubmit — see script at page bottom. -->
+    <form class="rv" id="contactForm"
+          action="https://formsubmit.co/bsbgroupdevelopers@gmail.com" method="POST">
+      <input type="hidden" name="_subject" value="New enquiry from bsbdevelopers.com">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_next" value="https://bsbdevelopers.com/thanks.html">
+      <!-- honeypot: invisible to people, bots fill it and get dropped -->
+      <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true"
+             style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+
+      <!-- Three fields, down from five: phone and subject didn't qualify a
+           lead, and every removed field raises completion. Phone is still
+           one tap away via the WhatsApp and call links opposite. -->
+      <div class="f-row">
+        <input type="text" name="name" placeholder="Your name" required>
+        <input type="email" name="email" placeholder="Email address" required>
+      </div>
+      <textarea name="message" placeholder="What do you want to build?" required></textarea>
+      <button class="cta" type="submit" id="submitBtn">
+        Book a 20-minute call <span class="arrow" aria-hidden="true">→</span>
+      </button>
+      <span class="f-note" id="formNote">No obligation — we reply within one business day.</span>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    <small>© 2026 BSB Group Developers · Hyderabad, India</small>
+    <div class="foot-links">
+      <a href="mailto:bsbgroupdevelopers@gmail.com">Email</a>
+      <a href="https://wa.me/919303008315" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="tel:+919303008315">Call</a>
+    </div>
+  </div>
+</footer>
+
+<a class="wa" href="https://wa.me/919303008315" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M.06 24l1.68-6.16a11.87 11.87 0 01-1.6-5.96C.15 5.32 5.5 0 12.06 0a11.8 11.8 0 018.4 3.49 11.75 11.75 0 013.48 8.4c0 6.55-5.35 11.88-11.94 11.88a12 12 0 01-5.72-1.45L.06 24zm6.6-3.8c1.7 1 3.3 1.6 5.4 1.6 5.45 0 9.9-4.42 9.9-9.87a9.82 9.82 0 00-9.9-9.87c-5.46 0-9.9 4.42-9.9 9.87 0 2.2.64 3.85 1.72 5.58l-.98 3.58 3.76-.98zm11.1-5.2c-.08-.12-.27-.2-.57-.35-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.15-.17.2-.35.22-.64.08-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.05-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.67-1.6-.92-2.2-.24-.58-.48-.5-.67-.5l-.57-.01c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.7.63.71.23 1.36.2 1.87.12.57-.08 1.75-.71 2-1.4.25-.7.25-1.28.17-1.4z"/></svg>
+</a>
+
+<script>
+(function(){
+'use strict';
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const finePointer = matchMedia('(pointer: fine)').matches;
+
+/* ============================================================
+   THEME TOGGLE
+   Explicit choice wins and is remembered; with no choice stored
+   the page follows the OS. FIELD is re-read on every switch so
+   the canvas wireframe flips with the palette — hardcoded white
+   lines would be invisible on the light background.
+   ============================================================ */
+const root = document.documentElement;
+const themeBtn = document.getElementById('themeBtn');
+let FIELD = '244,247,250';
+
+function readFieldColour(){
+  FIELD = getComputedStyle(root).getPropertyValue('--field-line').trim() || '244,247,250';
+}
+function currentTheme(){
+  return root.getAttribute('data-theme') ||
+    (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+}
+themeBtn.addEventListener('click', () => {
+  const next = currentTheme() === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', next);
+  try { localStorage.setItem('bsb-theme', next); } catch(e){}
+  readFieldColour();
+  draw();                       // repaint immediately, don't wait for a frame
+});
+/* follow the OS live, but only while the visitor hasn't chosen */
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+  if (!root.getAttribute('data-theme')){ readFieldColour(); draw(); }
+});
+
+/* ---------- nav border on scroll ---------- */
+const nav = document.getElementById('nav');
+addEventListener('scroll', () => nav.classList.toggle('stuck', scrollY > 12), {passive:true});
+
+/* ---------- reveal on scroll ---------- */
+const io = new IntersectionObserver(es => {
+  es.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+}, {threshold:.12, rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+/* ============================================================
+   CONTACT FORM → EMAIL
+   To change the destination address, edit BOTH this constant and
+   the form's action="" attribute above.
+   NOTE: the first submission from the live domain triggers a
+   one-time activation email from FormSubmit — click that link
+   once, or nothing is delivered afterwards.
+   ============================================================ */
+const FORM_INBOX = 'bsbgroupdevelopers@gmail.com';
+const FORM_ENDPOINT = 'https://formsubmit.co/ajax/' + FORM_INBOX;
+
+const form = document.getElementById('contactForm');
+const submitBtn = document.getElementById('submitBtn');
+const formNote = document.getElementById('formNote');
+const FALLBACK = 'Couldn\'t send that — please email <a href="mailto:' + FORM_INBOX + '">' +
+  FORM_INBOX + '</a> or <a href="https://wa.me/919303008315" target="_blank" rel="noopener">WhatsApp us</a>.';
+
+form.addEventListener('submit', async function(e){
+  e.preventDefault();
+  if (form._honey.value) return;              // bot caught by honeypot
+  if (!form.reportValidity()) return;
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending…';
+  formNote.style.color = '';
+  formNote.textContent = 'Sending your message…';
+
+  try {
+    const res = await fetch(FORM_ENDPOINT, {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body: JSON.stringify(Object.fromEntries(new FormData(form)))
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && String(data.success) === 'true'){
+      form.reset();
+      formNote.style.color = 'var(--ok)';
+      formNote.innerHTML = '✓ Thanks — your message is on its way. We\'ll reply within one business day.';
+      submitBtn.textContent = 'Message sent';
+    } else {
+      throw new Error(data.message || 'rejected');
+    }
+  } catch (err) {
+    formNote.style.color = 'var(--err)';
+    formNote.innerHTML = FALLBACK;
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = 'Send message <span class="arrow" aria-hidden="true">→</span>';
+  }
+});
+
+/* ============================================================
+   POINTER SYSTEM
+   One rAF loop drives the spotlight, the CTA proximity glow and
+   the focal point. Listeners only store coordinates; every layout
+   read and write happens inside the frame, so moving the mouse
+   never forces a synchronous reflow.
+   ============================================================ */
+const hero = document.getElementById('hero');
+const spot = document.getElementById('spot');
+const ctas = Array.from(document.querySelectorAll('.cta'));
+
+let pointerX = innerWidth/2, pointerY = innerHeight*0.4, hasPointer = false;
+if (finePointer && !reduced){
+  addEventListener('pointermove', e => {
+    pointerX = e.clientX; pointerY = e.clientY; hasPointer = true;
+  }, {passive:true});
+}
+
+const RANGE = 340;
+function updateProximity(){
+  if (!hasPointer) return;
+  for (const btn of ctas){
+    const r = btn.getBoundingClientRect();
+    if (r.bottom < -200 || r.top > innerHeight + 200) continue;
+    const dx = Math.max(r.left - pointerX, 0, pointerX - r.right);
+    const dy = Math.max(r.top - pointerY, 0, pointerY - r.bottom);
+    let p = 1 - Math.hypot(dx,dy)/RANGE;
+    p = p < 0 ? 0 : p > 1 ? 1 : p;
+    btn.style.setProperty('--prox', (p*p).toFixed(3));  // squared = sharper ramp near target
+  }
+}
+
+/* ---- focal point: wireframe icosahedron, canvas 2D, no libraries.
+   Rendered in white only; the accent stays reserved for clickables. ---- */
+const canvas = document.getElementById('field');
+const ctx = canvas.getContext('2d');
+
+const PHI = (1 + Math.sqrt(5)) / 2;
+const V = [[0,1,PHI],[0,-1,PHI],[0,1,-PHI],[0,-1,-PHI],
+           [1,PHI,0],[-1,PHI,0],[1,-PHI,0],[-1,-PHI,0],
+           [PHI,0,1],[-PHI,0,1],[PHI,0,-1],[-PHI,0,-1]];
+/* connected vertices on an icosahedron of edge length 2 are exactly 2 apart */
+const E = [];
+for (let i=0;i<V.length;i++) for (let j=i+1;j<V.length;j++){
+  const d = Math.hypot(V[i][0]-V[j][0], V[i][1]-V[j][1], V[i][2]-V[j][2]);
+  if (Math.abs(d-2) < 0.001) E.push([i,j]);
+}
+
+let dpr=1, cw=0, ch=0, scale=0;
+function sizeCanvas(){
+  const css = Math.min(640, Math.max(320, Math.min(innerWidth*0.92, innerHeight*0.82)));
+  dpr = Math.min(devicePixelRatio || 1, 2);   // cap DPR: 3x costs pixels, shows nothing
+  canvas.style.width = css+'px'; canvas.style.height = css+'px';
+  canvas.width = Math.round(css*dpr); canvas.height = Math.round(css*dpr);
+  cw = canvas.width; ch = canvas.height;
+}
+sizeCanvas();
+addEventListener('resize', sizeCanvas, {passive:true});
+
+let rotX=-0.3, rotY=0.4, tgtX=-0.3, tgtY=0.4, spin=0;
+
+function project(v, ax, ay, cx, cy){
+  const x1 = v[0]*Math.cos(ay) - v[2]*Math.sin(ay);
+  const z1 = v[0]*Math.sin(ay) + v[2]*Math.cos(ay);
+  const y2 = v[1]*Math.cos(ax) - z1*Math.sin(ax);
+  const z2 = v[1]*Math.sin(ax) + z1*Math.cos(ax);
+  const persp = 3.4 / (3.4 + z2);
+  return {x: cx + x1*scale*persp, y: cy + y2*scale*persp, p: persp};
+}
+
+function draw(){
+  ctx.clearRect(0,0,cw,ch);
+  const cx=cw/2, cy=ch/2;
+  scale = cw*0.135;
+  spin += 0.0016;
+  rotX += (tgtX-rotX)*0.055;      // ease toward pointer-driven target
+  rotY += (tgtY-rotY)*0.055;
+  const pts = V.map(v => project(v, rotX, rotY+spin, cx, cy));
+
+  ctx.lineWidth = Math.max(1, dpr*0.85);
+  for (const [a,b] of E){
+    const pa=pts[a], pb=pts[b];
+    const alpha = Math.min(Math.max(((pa.p+pb.p)/2 - 0.62)/0.9, 0), 1);
+    ctx.strokeStyle = 'rgba(' + FIELD + ',' + (0.07 + alpha*0.42).toFixed(3) + ')';
+    ctx.beginPath(); ctx.moveTo(pa.x,pa.y); ctx.lineTo(pb.x,pb.y); ctx.stroke();
+  }
+  for (const p of pts){
+    const alpha = Math.min(Math.max((p.p-0.62)/0.9, 0), 1);
+    ctx.fillStyle = 'rgba(' + FIELD + ',' + (0.1 + alpha*0.55).toFixed(3) + ')';
+    ctx.beginPath(); ctx.arc(p.x, p.y, Math.max(1, dpr*(0.9+alpha*1.15)), 0, Math.PI*2); ctx.fill();
+  }
+}
+
+let running=false, rafId=0;
+function frame(){
+  if (!running) return;
+  if (hasPointer){
+    const nx = pointerX/innerWidth - 0.5;
+    const ny = pointerY/innerHeight - 0.5;
+    tgtY =  0.4 + nx*1.15;
+    tgtX = -0.3 + ny*0.85;
+    spot.style.setProperty('--mx', (pointerX/innerWidth*100).toFixed(2)+'%');
+    spot.style.setProperty('--my', (pointerY/innerHeight*100).toFixed(2)+'%');
+    updateProximity();
+  }
+  draw();
+  rafId = requestAnimationFrame(frame);
+}
+function start(){ if(!running){ running=true; rafId=requestAnimationFrame(frame); } }
+function stop(){ running=false; cancelAnimationFrame(rafId); }
+
+/* Always paint one frame up front: if the page loads in a background
+   tab the loop is gated off, and without this the focal point would be
+   blank at the moment the visitor first switches to it. */
+readFieldColour();
+draw();
+
+if (!reduced){
+  /* Two conditions gate the loop — hero on screen AND tab foregrounded.
+     Both are tracked as state and reduced to a single decision; if each
+     listener called start/stop directly they would fight, and the loop
+     could be left stopped while visible. */
+  let heroVisible = true, pageVisible = !document.hidden;
+  const sync = () => (heroVisible && pageVisible) ? start() : stop();
+  new IntersectionObserver(es => { heroVisible = es[0].isIntersecting; sync(); },
+    {threshold:0}).observe(hero);
+  document.addEventListener('visibilitychange', () => {
+    pageVisible = !document.hidden; sync();
+  });
+  sync();
+}
+})();
+</script>
+</body>
+</html>
